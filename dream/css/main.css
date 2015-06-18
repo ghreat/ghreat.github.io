@@ -1,0 +1,173 @@
+/* RESET CSS HTML5 */
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, font, figure, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td, header {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	outline: 0;
+	font-weight: inherit;
+	font-style: inherit;
+	font-size: 100%;
+	font-family: inherit;
+	vertical-align: baseline;
+}
+html, body {
+	width: 100%;
+	height: 100%;
+}
+header, nav, article, section, aside, time, video, button, figure, footer {
+	display: block;
+}
+input {
+	cursor: pointer;
+}
+strong {
+	font-weight: bold;
+}
+:focus {
+	outline:0;
+}
+a {
+	text-decoration: none;
+}
+ol, ul {
+	list-style: none;
+}
+table {
+	border-collapse: separate;
+	border-spacing: 0;
+}
+caption, th, td {
+	text-align: left;
+	font-weight: normal;
+}
+blockquote:before, blockquote:after, q:before, q:after {
+	content: "";
+}
+blockquote, q {
+	quotes: "" "";
+}
+
+
+/* FONT-FACE */
+
+@font-face {
+  font-family: 'Helvetica Neue UltraLight';
+  src: url('fonts/HelveticaNeue-UltraLight.eot'); /* IE9 Compat Modes */
+  src: url('fonts/HelveticaNeue-UltraLight.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+       url('fonts/HelveticaNeue-UltraLight.woff') format('woff'), /* Modern Browsers */
+       url('fonts/HelveticaNeue-UltraLight.ttf')  format('truetype'), /* Safari, Android, iOS */
+       url('fonts/HelveticaNeue-UltraLight.svg#9453ea8da727d260bcdbfa605bdbb5d2') format('svg'); /* Legacy iOS */
+
+  font-style:   normal;
+  font-weight:  200;
+}
+
+
+
+/* COMMON */
+
+html {
+
+	width: 100%;
+	height: 100%;
+}
+
+body {
+
+	width: 100%;
+	height: 100%;
+	background-color: #ffffff;
+	color: #666666;
+	font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+	font-size: 12px;
+	line-height: 16px;
+
+	-webkit-font-smoothing: antialiased;
+}
+
+h3 {
+
+	position: absolute;
+	left: 50%;
+	bottom: 34px;
+	z-index: 2;
+	float: left;
+	clear: both;
+	font-family: 'Helvetica Neue UltraLight', Arial,sans-serif;
+	font-size: 80px;
+	line-height: 100px;
+	width: 800px;
+	text-align: center;
+	margin: -50px 0 0 -400px;
+
+	-webkit-font-smoothing: antialiased;
+
+	color: rgb(68,242,74);
+ 	background: -webkit-linear-gradient(top, rgb(5, 19, 47) 0%, rgb(31, 81, 142) 47%, rgb(83, 152, 210) 73%, rgb(235, 245, 255) 94%, rgb(255, 255, 255) 100%);
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+}
+
+h4 {
+
+	position: absolute;
+	left: 10%;
+	top: 50%;
+	z-index: 2;
+	float: left;
+	clear: both;
+	font-family: 'Helvetica Neue UltraLight', Arial,sans-serif;
+	font-size: 50px;
+	line-height: 60px;
+	width: 80%;
+	text-align: center;
+	margin-top: -120px;
+
+	-webkit-font-smoothing: antialiased;
+
+	display: none;
+
+	color: #999999;
+}
+
+p {
+
+	position: absolute;
+	left: 0;
+	bottom: 20px;
+	z-index: 2;
+	float: right;
+	clear: both;
+	width: 100%;
+	text-align: center;
+}
+
+a {
+
+	font-style: italic;
+	color: #666666;
+}
+
+a:hover {
+
+	color: rgb(68,242,74);
+	background: -webkit-linear-gradient(left, rgba(68,242,74,1) 0%, rgba(0,193,200,1) 25%, rgba(59,113,250,1) 50%, rgba(255,73,94,1) 85%, rgba(255,135,50,1) 100%);
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+}
+
+canvas {
+
+	position: absolute;
+	left: 0px;
+	top: 20px;
+	z-index: 1;
+}
