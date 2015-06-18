@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="language" content="en" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge;chrome=1" />
+<title>WWDC 2014 WebGL Welcome</title>
+<meta name="title" content="WWDC 2014 WebGL" />
+<meta name="description" content="WWDC 2014 WebGL" />
+<link rel="shortcut icon" href="img/icon/favicon.ico" />
+<meta name="viewport" content="initial-scale = 1.0, maximum-scale = 1.0, user-scalable=no" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta names="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<link rel="stylesheet" type="text/css" href="/style/into.dreams.css" />
+</head>
+<body>
+<h3>WEBGL
+</h3><p>Welcome Safari. <a href="https://twitter.com/is__real">@is__real</a>
+</p><h4 id="no-webgl">Sorry, you need a<br />WebGL enabled browser to see this.
+</h4><script id="fragmentShader" type="x-shader/x-fragment">
+                #ifdef GL_ES
+                precision mediump float;
+                #endif
+
+                uniform float time;
+                uniform vec2 mouse;
+                uniform vec2 resolution;
+
+                vec2 vUv;
+                float aspect;
+
+                // Number of dots / squircles per row/col
+                float frequency = 25.0;
+
+                // Antialias helper for the dots
+                float antialiasStep( float threshold, float value ) {
+
+                        float afwidth = frequency * ( 1.0 / 200.0 );
+                        return smoothstep( threshold - afwidth, threshold, value );
+                }
+
+                // Draw rounded box
+                float roundedBox( vec2 position, vec2 size, float radius ) {
+
+                        return length( max( abs( position ) - size, 0.0 ) ) - radius;
+                }
+
+                void main ( void ) {
+
+                        // Screen size data
+
+                        aspect = resolution.x / resolution.y;
+
+                        vUv = ( gl_FragCoord.xy / resolution.xy );
+                        vUv.x *= aspect;
+
+
+                        // ---------------------------------
+                        // Gradient
+                        // ---------------------------------
+
+                        vec4 gradientColor;
+                        float gradientX = gl_FragCoord.x;
+
+                        vec4 gradientColorStep1 = vec4( 0.2667, 0.9490, 0.2863, 1.0000 );
+                        vec4 gradientColorStep2 = vec4( 0.0000, 0.7529, 0.7843, 1.0000 );
+                        vec4 gradientColorStep3 = vec4( 0.2314, 0.4471, 0.9804, 1.0000 );
+                        vec4 gradientColorStep4 = vec4( 0.9882, 0.2510, 0.3647, 1.0000 );
+                        vec4 gradientColorStep5 = vec4( 1.0000, 0.5373, 0.1961, 1.0000 );
+
+                        float gradientStep1 = 0.0;
+                        float gradientStep2 = resolution.x * 0.25;
+                        float gradientStep3 = resolution.x * 0.45;
+                        float gradientStep4 = resolution.x * 0.85;
+
+                        gradientColor = mix( gradientColorStep1, gradientColorStep2, smoothstep( gradientStep1, gradientStep2, gradientX ));
+                        gradientColor = mix( gradientColor, gradientColorStep3, smoothstep( gradientStep2, gradientStep3, gradientX ));
+                        gradientColor = mix( gradientColor, gradientColorStep4, smoothstep( gradientStep3, resolution.x, gradientX ));
+                        gradientColor = mix( gradientColor, gradientColorStep5, smoothstep( gradientStep4, resolution.x, gradientX ));
+
+
+
+                        // ---------------------------------
+                        // Metaballs ( 4 simple blobs )
+                        // ---------------------------------
+
+                        // Position of the blobs
+
+                        float timez = 0.0;
+
+                        vec2 blob1;
+                        blob1.x = cos( time );
+                        blob1.y = sin( time * 0.75 );
+
+                        vec2 blob2;
+                        blob2.x = cos( time * 1.0 );
+                        blob2.y = sin( time * 1.5 );
+
+                        vec2 blob3;
+                        blob3.x = sin( time ) * cos( time * 0.25 );
+                        blob3.y = cos( time * 0.25 ) * sin( time * 1.25 );
+
+                        vec2 blob4;
+                        blob4.x = sin( time * 0.25) * cos( time * 0.75 );
+                        blob4.y = cos( time * 0.25 );
+
+                        // Screen coordinates
+
+                        vec2 p = -1.0 + 2.0 * gl_FragCoord.xy / resolution.xy;
+                                p.x *= aspect;
+
+                        // Radius for each blob
+
+                        float blobRadius1 = ( dot( p - blob1, p - blob1 ) ) * 8.0;
+                        float blobRadius2 = ( dot( p + blob2, p + blob2 ) ) * 6.0;
+                        float blobRadius3 = ( dot( p + blob3, p + blob3 ) ) * 6.0;
+                        float blobRadius4 = ( dot( p + blob4, p + blob4 ) ) * 2.0;
+
+                        // Metaball effect ( sum up their proximities )
+
+                        float metaball = ( ( 0.4 / blobRadius1 ) + ( 0.4 / blobRadius2 ) + ( 0.4 / blobRadius3 ) + ( 0.4 / blobRadius4 ) );
+
+                        float metaballR = smoothstep( 1.0, 0.25, metaball );
+                        float metaballG = smoothstep( 1.0, 0.25, metaball );
+                        float metaballB = smoothstep( 1.0, 0.25, metaball );
+
+                        vec4 metaballsColor = vec4( metaballR, metaballG, metaballB, 1.0 );
+
+                        // Invert metaballsColor ( better for the dot effect )
+
+                        metaballsColor = vec4( 1.0 - metaballR, 1.0 - metaballG, 1.0 - metaballB, 1.0 );
+
+                        // ---------------------------------
+                        // Dot effect ( halftone color like )
+                        // ---------------------------------
+
+                        // Distance to nearest point in a grid of aprox
+                        // frequency x frequency points over the unit square
+
+                        vec2 nearest = 2.0 * fract( frequency * vUv ) - 1.0;
+                        float distX = length( nearest.x );
+                        float distY = length( nearest.y );
+                        float dist = length( nearest );
+
+                        // Calculate the radius based on the black &amp; white metaballs effect
+                        // using the green channel
+
+                        vec3 dotColorCalculation = metaballsColor.rgb;
+                        float radius = sqrt( 1.0 - dotColorCalculation.g );
+
+                        // For the final colors of the haltone, we use white
+                        // and the original color of the gradient
+
+                        vec3 white = vec3( 1.0, 1.0, 1.0 );
+
+                        // Dot alike
+                        vec4 halfToneDotColor = vec4( mix( gradientColor.rgb, white, antialiasStep( radius, dist ) ), 1.0 );
+
+                        // Rounded box alike
+                        float b = roundedBox( vec2( distX+0.02, distY+0.02 ), vec2( 0.5 * radius ), 0.4 * radius );
+                        vec4 halfToneSquircleColor = vec4( mix( white, gradientColor.rgb, smoothstep(0.05, 0.0, b) ), 1.0 );
+
+                        // ---------------------------------
+                        // Final color
+                        // ---------------------------------
+
+                        // Different steps results
+                        //
+                        // gl_FragColor = gradientColor;
+                        // gl_FragColor = metaballsColor;
+                        // gl_FragColor = halfToneDotColor;
+
+                        gl_FragColor = halfToneSquircleColor;
+
+                }
+
+        </script>
+        <script src="/script/into.dreams.js" type="text/javascript"></script>
+        <script type="text/javascript">
+                Effect.init();
+        </script>
+</body></html>
